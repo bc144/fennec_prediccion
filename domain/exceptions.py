@@ -28,4 +28,9 @@ class FeatureNoValida(DomainException):
 class ErrorPrediccion(DomainException):
     """Se levanta cuando hay un error en la predicción"""
     def __init__(self, mensaje: str):
-        super().__init__(f"Error en la predicción: {mensaje}") 
+        super().__init__(f"Error en la predicción: {mensaje}")
+
+
+class ErrorEstadisticas(DomainException):
+    """Se lanza cuando hay un error al calcular estadísticas"""
+    pass 

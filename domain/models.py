@@ -26,4 +26,22 @@ class Prediccion(BaseModel):
     precio_estimado: float
     alcaldia: str
     caracteristicas: Dict[str, float]
-    fecha_prediccion: str 
+    fecha_prediccion: str
+
+
+class PrecioM2Response(BaseModel):
+    """Respuesta con precio promedio por metro cuadrado"""
+    precio_m2: float
+
+
+class EstadisticasPrecios(BaseModel):
+    """Estadísticas de precios para un tipo de propiedad"""
+    precio_minimo: float
+    precio_maximo: float
+    precio_promedio: float
+    precio_mediana: float
+
+
+class TotalResponse(BaseModel):
+    """Respuesta con total de propiedades"""
+    total: int 
