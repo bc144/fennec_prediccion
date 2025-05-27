@@ -1,15 +1,6 @@
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import casas_router, departamentos_router
-from dotenv import load_dotenv
-import os
-
-# Cargar variables de entorno
-load_dotenv()
-
-# Verificar la clave API del INEGI
-if not os.getenv("INEGI_API_KEY"):
-    print("ADVERTENCIA: No se encontró la clave de API del INEGI. Crea un archivo .env con INEGI_API_KEY=tu_clave")
+from app.routers import casas_router, departamentos_router, stats_router, fibras_router
 
 # Crear la aplicación
 app = FastAPI(
@@ -30,6 +21,8 @@ app.add_middleware(
 # Incluir los routers
 app.include_router(casas_router)
 app.include_router(departamentos_router)
+app.include_router(stats_router)
+app.include_router(fibras_router)
 
 
 @app.get("/", tags=["root"])
@@ -39,7 +32,9 @@ async def root():
         "message": "API de predicción de precios inmobiliarios",
         "endpoints": {
             "casas": "/casas/predict",
-            "departamentos": "/departamentos/predict"
+            "departamentos": "/departamentos/predict",
+            "estadisticas": "/stats",
+            "fibras": "/fibras"
         }
     }
 

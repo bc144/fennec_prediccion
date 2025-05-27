@@ -3,8 +3,7 @@ from typing import Dict, Any
 
 from domain.models import Prediccion, DepartamentoInputData
 from domain.exceptions import AlcaldiaNoEncontrada, ModeloNoDisponible, ErrorPrediccion
-
-from infra.data.deptos_repo import DepartamentosRepository
+from infra.data import DepartamentosRepository
 
 
 def predict_departamento(input_data: DepartamentoInputData) -> Prediccion:

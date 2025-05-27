@@ -1,9 +1,7 @@
-from infra.data import InegiClient, CasasRepository, DepartamentosRepository
-from infra.services import calcular_tasa
+from infra.data import CasasRepository, DepartamentosRepository, StatsRepository
 
 __all__ = [
-    'InegiClient',
     'CasasRepository',
     'DepartamentosRepository',
-    'calcular_tasa'
+    'StatsRepository'
 ] 

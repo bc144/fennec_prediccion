@@ -1,4 +1,10 @@
-from domain.models import PrecioM2Response, EstadisticasPrecios, TotalResponse
+from domain.models import (
+    PrecioM2Response, 
+    EstadisticasPrecios, 
+    TotalResponse, 
+    PreciosAlcaldiaResponse,
+    PrecioM2AlcaldiaResponse
+)
 from domain.exceptions import ErrorEstadisticas
 from infra.data.stats_repo import StatsRepository
 
@@ -16,7 +22,7 @@ def get_precio_m2_casas() -> PrecioM2Response:
     try:
         repo = StatsRepository()
         precio_m2 = repo.get_precio_m2_casas()
-        return PrecioM2Response(precio_m2=precio_m2)
+        return precio_m2
     except Exception as e:
         raise ErrorEstadisticas(str(e))
 
@@ -34,7 +40,7 @@ def get_precio_m2_departamentos() -> PrecioM2Response:
     try:
         repo = StatsRepository()
         precio_m2 = repo.get_precio_m2_departamentos()
-        return PrecioM2Response(precio_m2=precio_m2)
+        return precio_m2
     except Exception as e:
         raise ErrorEstadisticas(str(e))
 
@@ -51,8 +57,8 @@ def get_stats_casas() -> EstadisticasPrecios:
     """
     try:
         repo = StatsRepository()
-        datos = repo.get_stats_casas()
-        return EstadisticasPrecios(**datos)
+        stats = repo.get_stats_casas()
+        return stats
     except Exception as e:
         raise ErrorEstadisticas(str(e))
 
@@ -69,8 +75,8 @@ def get_stats_departamentos() -> EstadisticasPrecios:
     """
     try:
         repo = StatsRepository()
-        datos = repo.get_stats_departamentos()
-        return EstadisticasPrecios(**datos)
+        stats = repo.get_stats_departamentos()
+        return stats
     except Exception as e:
         raise ErrorEstadisticas(str(e))
 
@@ -88,7 +94,7 @@ def get_total_casas() -> TotalResponse:
     try:
         repo = StatsRepository()
         total = repo.get_total_casas()
-        return TotalResponse(total=total)
+        return total
     except Exception as e:
         raise ErrorEstadisticas(str(e))
 
@@ -106,7 +112,7 @@ def get_total_departamentos() -> TotalResponse:
     try:
         repo = StatsRepository()
         total = repo.get_total_departamentos()
-        return TotalResponse(total=total)
+        return total
     except Exception as e:
         raise ErrorEstadisticas(str(e))
 
@@ -124,6 +130,114 @@ def get_total_propiedades() -> TotalResponse:
     try:
         repo = StatsRepository()
         total = repo.get_total_propiedades()
-        return TotalResponse(total=total)
+        return total
+    except Exception as e:
+        raise ErrorEstadisticas(str(e))
+
+
+def get_precios_por_alcaldia_casas() -> PreciosAlcaldiaResponse:
+    """
+    Caso de uso para obtener precios promedio por alcaldía para casas
+    
+    Returns:
+        Precios promedio por alcaldía
+        
+    Raises:
+        ErrorEstadisticas: Si hay un error al calcular las estadísticas
+    """
+    try:
+        repo = StatsRepository()
+        precios = repo.get_precio_promedio_por_alcaldia_casas()
+        return PreciosAlcaldiaResponse(precios=precios)
+    except Exception as e:
+        raise ErrorEstadisticas(str(e))
+
+
+def get_precios_por_alcaldia_departamentos() -> PreciosAlcaldiaResponse:
+    """
+    Caso de uso para obtener precios promedio por alcaldía para departamentos
+    
+    Returns:
+        Precios promedio por alcaldía
+        
+    Raises:
+        ErrorEstadisticas: Si hay un error al calcular las estadísticas
+    """
+    try:
+        repo = StatsRepository()
+        precios = repo.get_precio_promedio_por_alcaldia_departamentos()
+        return PreciosAlcaldiaResponse(precios=precios)
+    except Exception as e:
+        raise ErrorEstadisticas(str(e))
+
+
+def get_precios_por_alcaldia_total() -> PreciosAlcaldiaResponse:
+    """
+    Caso de uso para obtener precios promedio por alcaldía para todas las propiedades
+    
+    Returns:
+        Precios promedio por alcaldía
+        
+    Raises:
+        ErrorEstadisticas: Si hay un error al calcular las estadísticas
+    """
+    try:
+        repo = StatsRepository()
+        precios = repo.get_precio_promedio_por_alcaldia_total()
+        return PreciosAlcaldiaResponse(precios=precios)
+    except Exception as e:
+        raise ErrorEstadisticas(str(e))
+
+
+def get_precio_m2_por_alcaldia_casas() -> PrecioM2AlcaldiaResponse:
+    """
+    Caso de uso para obtener precio promedio por metro cuadrado por alcaldía para casas
+    
+    Returns:
+        Precios promedio por metro cuadrado por alcaldía
+        
+    Raises:
+        ErrorEstadisticas: Si hay un error al calcular las estadísticas
+    """
+    try:
+        repo = StatsRepository()
+        precios = repo.get_precio_m2_por_alcaldia_casas()
+        return PrecioM2AlcaldiaResponse(precios=precios)
+    except Exception as e:
+        raise ErrorEstadisticas(str(e))
+
+
+def get_precio_m2_por_alcaldia_departamentos() -> PrecioM2AlcaldiaResponse:
+    """
+    Caso de uso para obtener precio promedio por metro cuadrado por alcaldía para departamentos
+    
+    Returns:
+        Precios promedio por metro cuadrado por alcaldía
+        
+    Raises:
+        ErrorEstadisticas: Si hay un error al calcular las estadísticas
+    """
+    try:
+        repo = StatsRepository()
+        precios = repo.get_precio_m2_por_alcaldia_departamentos()
+        return PrecioM2AlcaldiaResponse(precios=precios)
+    except Exception as e:
+        raise ErrorEstadisticas(str(e))
+
+
+def get_precio_m2_por_alcaldia_total() -> PrecioM2AlcaldiaResponse:
+    """
+    Caso de uso para obtener precio promedio por metro cuadrado por alcaldía para todas las propiedades
+    
+    Returns:
+        Precios promedio por metro cuadrado por alcaldía
+        
+    Raises:
+        ErrorEstadisticas: Si hay un error al calcular las estadísticas
+    """
+    try:
+        repo = StatsRepository()
+        precios = repo.get_precio_m2_por_alcaldia_total()
+        return PrecioM2AlcaldiaResponse(precios=precios)
     except Exception as e:
         raise ErrorEstadisticas(str(e)) 

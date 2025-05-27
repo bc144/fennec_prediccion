@@ -1,0 +1,144 @@
+API de Estadísticas Inmobiliarias
+================================
+
+1. Endpoints de Precio por Metro Cuadrado General
+-----------------------------------------------
+GET /stats/casas/precio-m2
+- Devuelve el precio promedio por metro cuadrado de todas las casas
+- Respuesta: { "precio_m2": float }
+
+GET /stats/departamentos/precio-m2
+- Devuelve el precio promedio por metro cuadrado de todos los departamentos
+- Respuesta: { "precio_m2": float }
+
+2. Endpoints de Estadísticas Generales
+------------------------------------
+GET /stats/casas/stats
+- Devuelve estadísticas detalladas de precios de casas
+- Respuesta: {
+    "precio_minimo": float,
+    "precio_maximo": float,
+    "precio_promedio": float,
+    "precio_mediana": float
+  }
+
+GET /stats/departamentos/stats
+- Devuelve estadísticas detalladas de precios de departamentos
+- Respuesta: {
+    "precio_minimo": float,
+    "precio_maximo": float,
+    "precio_promedio": float,
+    "precio_mediana": float
+  }
+
+3. Endpoints de Conteo
+--------------------
+GET /stats/casas/total
+- Devuelve el número total de casas
+- Respuesta: { "total": int }
+
+GET /stats/departamentos/total
+- Devuelve el número total de departamentos
+- Respuesta: { "total": int }
+
+GET /stats/total
+- Devuelve el número total de propiedades (casas + departamentos)
+- Respuesta: { "total": int }
+
+4. Endpoints de Precios por Alcaldía
+---------------------------------
+GET /stats/casas/precios-por-alcaldia
+- Devuelve el precio promedio de casas por alcaldía
+- Respuesta: {
+    "precios": {
+      "alcaldia1": float,
+      "alcaldia2": float,
+      ...
+    }
+  }
+
+GET /stats/departamentos/precios-por-alcaldia
+- Devuelve el precio promedio de departamentos por alcaldía
+- Respuesta: {
+    "precios": {
+      "alcaldia1": float,
+      "alcaldia2": float,
+      ...
+    }
+  }
+
+GET /stats/precios-por-alcaldia
+- Devuelve el precio promedio de todas las propiedades por alcaldía
+- Respuesta: {
+    "precios": {
+      "alcaldia1": float,
+      "alcaldia2": float,
+      ...
+    }
+  }
+
+5. Endpoints de Precio por Metro Cuadrado por Alcaldía
+--------------------------------------------------
+GET /stats/casas/precio-m2-por-alcaldia
+- Devuelve el precio promedio por metro cuadrado de casas por alcaldía
+- Respuesta: {
+    "precios": {
+      "alcaldia1": float,
+      "alcaldia2": float,
+      ...
+    }
+  }
+
+GET /stats/departamentos/precio-m2-por-alcaldia
+- Devuelve el precio promedio por metro cuadrado de departamentos por alcaldía
+- Respuesta: {
+    "precios": {
+      "alcaldia1": float,
+      "alcaldia2": float,
+      ...
+    }
+  }
+
+GET /stats/precio-m2-por-alcaldia
+- Devuelve el precio promedio por metro cuadrado de todas las propiedades por alcaldía
+- Respuesta: {
+    "precios": {
+      "alcaldia1": float,
+      "alcaldia2": float,
+      ...
+    }
+  }
+
+6. Endpoints de Predicción
+------------------------
+GET /casas/predict
+- Devuelve la predicción de precio para una casa
+- Parámetros (Query Parameters):
+    * metros_cuadrados: float (requerido)
+    * recamaras: int (requerido)
+    * banos: int (requerido)
+    * estacionamientos: int (requerido)
+    * alcaldia: string (requerido)
+- Respuesta: {
+    "precio_predicho": float
+  }
+
+GET /departamentos/predict
+- Devuelve la predicción de precio para un departamento
+- Parámetros (Query Parameters):
+    * metros_cuadrados: float (requerido)
+    * recamaras: int (requerido)
+    * banos: int (requerido)
+    * estacionamientos: int (requerido)
+    * alcaldia: string (requerido)
+- Respuesta: {
+    "precio_predicho": float
+  }
+
+Notas:
+------
+- Todos los endpoints devuelven un código 200 OK si la petición es exitosa
+- En caso de error, devuelven un código 500 con un mensaje de error
+- Los precios están en pesos mexicanos (MXN)
+- Los metros cuadrados están en m²
+- Se eliminan outliers antes de calcular los promedios para obtener resultados más precisos 

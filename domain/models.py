@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Optional, Dict, List
+from datetime import datetime
 
 
 class CasaInputData(BaseModel):
@@ -44,4 +45,21 @@ class EstadisticasPrecios(BaseModel):
 
 class TotalResponse(BaseModel):
     """Respuesta con total de propiedades"""
-    total: int 
+    total: int
+
+
+class FibraPrecio(BaseModel):
+    """Modelo para el precio de una FIBRA"""
+    ticker: str
+    precio: float
+    fecha: datetime
+
+
+class PreciosAlcaldiaResponse(BaseModel):
+    """Respuesta con precios promedio por alcaldía"""
+    precios: Dict[str, float]
+
+
+class PrecioM2AlcaldiaResponse(BaseModel):
+    """Respuesta con precio promedio por metro cuadrado por alcaldía"""
+    precios: Dict[str, float] 
