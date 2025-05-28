@@ -1,6 +1,9 @@
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import casas_router, departamentos_router, stats_router, fibras_router
+from app.routers.casas import router as casas_router
+from app.routers.departamentos import router as departamentos_router
+from app.routers.stats import router as stats_router
+from app.routers.fibras import router as fibras_router
 
 # Crear la aplicación
 app = FastAPI(

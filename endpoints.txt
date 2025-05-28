@@ -111,9 +111,9 @@ GET /stats/precio-m2-por-alcaldia
 
 6. Endpoints de Predicción
 ------------------------
-GET /casas/predict
+POST /casas/predict
 - Devuelve la predicción de precio para una casa
-- Parámetros (Query Parameters):
+- Parámetros (Body JSON):
     * metros_cuadrados: float (requerido)
     * recamaras: int (requerido)
     * banos: int (requerido)
@@ -123,9 +123,9 @@ GET /casas/predict
     "precio_predicho": float
   }
 
-GET /departamentos/predict
+POST /departamentos/predict
 - Devuelve la predicción de precio para un departamento
-- Parámetros (Query Parameters):
+- Parámetros (Body JSON):
     * metros_cuadrados: float (requerido)
     * recamaras: int (requerido)
     * banos: int (requerido)
@@ -141,4 +141,90 @@ Notas:
 - En caso de error, devuelven un código 500 con un mensaje de error
 - Los precios están en pesos mexicanos (MXN)
 - Los metros cuadrados están en m²
-- Se eliminan outliers antes de calcular los promedios para obtener resultados más precisos 
+- Se eliminan outliers antes de calcular los promedios para obtener resultados más precisos
+
+# Endpoints de la API de Fennec ML
+
+## Predicciones de Casas
+POST /casas/predict
+- Predice el precio de una casa
+- Parámetros (Body JSON):
+  * metros_cuadrados: float (>0)
+  * recamaras: int (≥0)
+  * banos: int (≥0)
+  * estacionamientos: int (≥0)
+  * alcaldia: string
+- Ejemplo: 
+  ```json
+  {
+    "metros_cuadrados": 100,
+    "recamaras": 2,
+    "banos": 1,
+    "estacionamientos": 1,
+    "alcaldia": "Benito Juarez"
+  }
+  ```
+
+## Predicciones de Departamentos
+POST /departamentos/predict
+- Predice el precio de un departamento
+- Parámetros (Body JSON):
+  * metros_cuadrados: float (>0)
+  * recamaras: int (≥0)
+  * banos: int (≥0)
+  * estacionamientos: int (≥0)
+  * alcaldia: string
+- Ejemplo:
+  ```json
+  {
+    "metros_cuadrados": 80,
+    "recamaras": 2,
+    "banos": 1,
+    "estacionamientos": 1,
+    "alcaldia": "Miguel Hidalgo"
+  }
+  ```
+
+## Estadísticas de Casas
+GET /stats/casas/precio-m2
+- Obtiene el precio promedio por metro cuadrado para casas
+- Sin parámetros
+
+GET /stats/casas/stats
+- Obtiene estadísticas generales de precios de casas (mínimo, máximo, promedio, mediana)
+- Sin parámetros
+
+## Estadísticas de Departamentos
+GET /stats/departamentos/precio-m2
+- Obtiene el precio promedio por metro cuadrado para departamentos
+- Sin parámetros
+
+GET /stats/departamentos/stats
+- Obtiene estadísticas generales de precios de departamentos (mínimo, máximo, promedio, mediana)
+- Sin parámetros
+
+## Estadísticas Generales
+GET /stats/total
+- Obtiene el total de propiedades en la base de datos
+- Sin parámetros
+
+GET /stats/precios-por-alcaldia
+- Obtiene los precios promedio por alcaldía para todas las propiedades
+- Sin parámetros
+
+## FIBRAs
+GET /fibras/{nombre}
+- Obtiene datos actuales de una FIBRA específica
+- Parámetros (path):
+  * nombre: string (FUNO, FMTY, FIBRAPL)
+- Ejemplo: /fibras/FUNO
+
+GET /fibras/
+- Obtiene datos actuales de todas las FIBRAs disponibles
+- Sin parámetros
+
+## Notas:
+1. Todos los endpoints retornan código 200 en caso de éxito
+2. Los precios se devuelven en pesos mexicanos (MXN)
+3. Las áreas se manejan en metros cuadrados
+4. Las variaciones de FIBRAs se expresan en porcentaje 

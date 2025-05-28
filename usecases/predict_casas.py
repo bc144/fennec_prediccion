@@ -39,13 +39,13 @@ def predict_casa(input_data: CasaInputData) -> Prediccion:
         # 3. Construir y retornar la respuesta
         return Prediccion(
             tipo_propiedad="casa",
-            precio_estimado=precio_estimado,
+            precio_estimado=round(precio_estimado, 2),
             alcaldia=input_data.alcaldia,
             caracteristicas={
-                'metros_cuadrados': input_data.metros_cuadrados,
-                'recamaras': input_data.recamaras,
-                'banos': input_data.banos,
-                'estacionamientos': input_data.estacionamientos
+                'metros_cuadrados': float(input_data.metros_cuadrados),
+                'recamaras': int(input_data.recamaras),
+                'banos': int(input_data.banos),
+                'estacionamientos': int(input_data.estacionamientos)
             },
             fecha_prediccion=datetime.datetime.now().isoformat()
         )
