@@ -1,6 +1,5 @@
-from infra.services.fibra_prices import FibraPriceService, FibraNoEncontrada
+from infra.services.fibra_prices import FibraPriceService
 
 __all__ = [
-    'FibraPriceService',
-    'FibraNoEncontrada'
+    'FibraPriceService'
 ] 

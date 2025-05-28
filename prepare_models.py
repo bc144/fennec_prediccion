@@ -28,7 +28,7 @@ def train_models():
     
     # Limpiar columnas
     casas_df = casas_df.drop_duplicates()
-    casas_df['price_numeric'] = casas_df['price'].str.extract(r'MN\s+(\d+[\d,.]*)')
+    casas_df['price_numeric'] = casas_df['price'].str.extract(r'(\d+(?:,\d+)*(?:\.\d+)?)')
     casas_df['price_numeric'] = casas_df['price_numeric'].str.replace(',', '').astype(float)
     
     # Extraer alcaldía desde la columna 'col'
@@ -38,12 +38,18 @@ def train_models():
     for col in ['recamaras', 'banos', 'estacionamientos']:
         casas_df = clean_numeric_column(casas_df, col)
     
-    # Extraer metros cuadrados
-    casas_df['metros_cuadrados'] = casas_df['terreno'].str.extract(r'(\d+)').astype(float)
+    # Extraer metros cuadrados desde terreno
+    casas_df['metros_cuadrados'] = pd.to_numeric(casas_df['terreno'].str.extract(r'(\d+)')[0], errors='coerce')
+    
+    # Eliminar filas con valores nulos
+    casas_df = casas_df.dropna(subset=['price_numeric', 'metros_cuadrados', 'recamaras', 'banos', 'estacionamientos'])
+    
+    # Aplicar transformación logarítmica a los precios
+    casas_df['log_price'] = np.log(casas_df['price_numeric'])
     
     # Seleccionar características para el modelo
     casas_features = casas_df[['metros_cuadrados', 'recamaras', 'banos', 'estacionamientos', 'alcaldia']]
-    casas_target = casas_df['price_numeric']
+    casas_target = casas_df['log_price']  # Usamos el precio logarítmico
     
     # Preparar variables categóricas
     casas_features = prepare_categorical(casas_features, 'alcaldia', 'alcaldia')
@@ -80,7 +86,7 @@ def train_models():
     
     # Limpiar columnas
     deptos_df = deptos_df.drop_duplicates()
-    deptos_df['price_numeric'] = deptos_df['price'].str.extract(r'MN\s+(\d+[\d,.]*)')
+    deptos_df['price_numeric'] = deptos_df['price'].str.extract(r'(\d+(?:,\d+)*(?:\.\d+)?)')
     deptos_df['price_numeric'] = deptos_df['price_numeric'].str.replace(',', '').astype(float)
     
     # Extraer alcaldía desde la columna 'col'
@@ -90,12 +96,18 @@ def train_models():
     for col in ['recamaras', 'banos', 'estacionamientos']:
         deptos_df = clean_numeric_column(deptos_df, col)
     
-    # Extraer metros cuadrados desde dimensiones
-    deptos_df['metros_cuadrados'] = pd.to_numeric(deptos_df['dimensiones'], errors='coerce')
+    # Extraer metros cuadrados desde terreno
+    deptos_df['metros_cuadrados'] = pd.to_numeric(deptos_df['terreno'].str.extract(r'(\d+)')[0], errors='coerce')
+    
+    # Eliminar filas con valores nulos
+    deptos_df = deptos_df.dropna(subset=['price_numeric', 'metros_cuadrados', 'recamaras', 'banos', 'estacionamientos'])
+    
+    # Aplicar transformación logarítmica a los precios
+    deptos_df['log_price'] = np.log(deptos_df['price_numeric'])
     
     # Seleccionar características para el modelo
     deptos_features = deptos_df[['metros_cuadrados', 'recamaras', 'banos', 'estacionamientos', 'alcaldia']]
-    deptos_target = deptos_df['price_numeric']
+    deptos_target = deptos_df['log_price']  # Usamos el precio logarítmico
     
     # Preparar variables categóricas
     deptos_features = prepare_categorical(deptos_features, 'alcaldia', 'alcaldia')

@@ -1,48 +1,62 @@
-from fastapi import APIRouter, HTTPException
-from domain.models import FibraPrecio
-from infra.services.fibra_prices import FibraNoEncontrada
-from usecases.get_fibra_price import get_fibra_price
+from fastapi import APIRouter, HTTPException, status
+from typing import List
+from domain.models import FibraResponse
+from domain.exceptions import ErrorFibras
+from usecases.get_fibras import get_fibra, get_all_fibras
 
+# Crear el router
 router = APIRouter(
     prefix="/fibras",
-    tags=["FIBRAs"]
+    tags=["Fibras"],
+    responses={
+        404: {"description": "FIBRA no encontrada"},
+        500: {"description": "Error interno del servidor"}
+    }
 )
 
-
-@router.get("/funo", response_model=FibraPrecio)
-async def get_funo_price():
+@router.get("/{nombre}", response_model=FibraResponse)
+async def obtener_fibra(nombre: str):
     """
-    Obtiene el precio más reciente de FUNO
-    """
-    try:
-        return get_fibra_price('funo')
-    except FibraNoEncontrada as e:
-        raise HTTPException(status_code=404, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@router.get("/fmty", response_model=FibraPrecio)
-async def get_fmty_price():
-    """
-    Obtiene el precio más reciente de FMTY
+    Obtiene los datos más recientes de una FIBRA específica
+    
+    Args:
+        nombre: Nombre de la FIBRA (ej: FUNO, FMTY, FIBRAPL)
+        
+    Returns:
+        Datos de la FIBRA incluyendo precio, variación y fecha
     """
     try:
-        return get_fibra_price('fmty')
-    except FibraNoEncontrada as e:
-        raise HTTPException(status_code=404, detail=str(e))
+        # Limpiar el nombre de la FIBRA de caracteres especiales
+        nombre = nombre.strip().upper()
+        return get_fibra(nombre)
+    except ErrorFibras as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e)
+        )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error interno: {str(e)}"
+        )
 
-
-@router.get("/danhos", response_model=FibraPrecio)
-async def get_danhos_price():
+@router.get("/", response_model=List[FibraResponse])
+async def obtener_todas_fibras():
     """
-    Obtiene el precio más reciente de DANHOS
+    Obtiene los datos más recientes de todas las FIBRAs disponibles
+    
+    Returns:
+        Lista con los datos de todas las FIBRAs
     """
     try:
-        return get_fibra_price('danhos')
-    except FibraNoEncontrada as e:
-        raise HTTPException(status_code=404, detail=str(e))
+        return get_all_fibras()
+    except ErrorFibras as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e)) 
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error interno: {str(e)}"
+        ) 

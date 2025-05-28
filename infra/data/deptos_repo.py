@@ -31,37 +31,42 @@ class DepartamentosRepository:
         Returns:
             Precio predicho
         """
-        # Crear un DataFrame con columnas que coincidan con las del modelo
-        X = pd.DataFrame(columns=self.columns)
-        X.loc[0] = 0  # Inicializar con ceros
-        
-        # Asignar valores numéricos básicos
-        X.loc[0, 'metros_cuadrados'] = input_data['metros_cuadrados']
-        X.loc[0, 'recamaras'] = input_data['recamaras']
-        X.loc[0, 'banos'] = input_data['banos']
-        X.loc[0, 'estacionamientos'] = input_data['estacionamientos']
-        
-        # Verificar que la alcaldía esté en las columnas del modelo
-        alcaldia_col = f"alcaldia_{input_data['alcaldia']}"
-        alcaldia_encontrada = False
-        
-        for col in self.columns:
-            if col.startswith('alcaldia_'):
-                if col == alcaldia_col:
-                    X.loc[0, col] = 1
-                    alcaldia_encontrada = True
-                else:
-                    X.loc[0, col] = 0
-        
-        if not alcaldia_encontrada:
-            raise AlcaldiaNoEncontrada(input_data['alcaldia'])
-        
-        # Aplicar el escalador
-        X_scaled = self.scaler.transform(X)
-        
-        # Hacer predicción
         try:
-            prediction = self.model.predict(X_scaled)[0]
-            return prediction
+            # Crear un DataFrame con columnas que coincidan con las del modelo
+            X = pd.DataFrame(columns=self.columns)
+            X.loc[0] = 0  # Inicializar con ceros
+            
+            # Asignar valores numéricos básicos
+            X.loc[0, 'metros_cuadrados'] = input_data['metros_cuadrados']
+            X.loc[0, 'recamaras'] = input_data['recamaras']
+            X.loc[0, 'banos'] = input_data['banos']
+            X.loc[0, 'estacionamientos'] = input_data['estacionamientos']
+            
+            # Verificar que la alcaldía esté en las columnas del modelo
+            alcaldia_col = f"alcaldia_{input_data['alcaldia']}"
+            alcaldia_encontrada = False
+            
+            for col in self.columns:
+                if col.startswith('alcaldia_'):
+                    if col == alcaldia_col:
+                        X.loc[0, col] = 1
+                        alcaldia_encontrada = True
+                    else:
+                        X.loc[0, col] = 0
+            
+            if not alcaldia_encontrada:
+                raise AlcaldiaNoEncontrada(input_data['alcaldia'])
+            
+            # Aplicar el escalador
+            X_scaled = self.scaler.transform(X)
+            
+            # Hacer predicción (el modelo devuelve el logaritmo del precio)
+            log_prediction = self.model.predict(X_scaled)[0]
+            
+            # Convertir de logaritmo a precio real
+            prediction = np.exp(log_prediction)
+            
+            return float(prediction)
+            
         except Exception as e:
             raise FeatureNoValida(f"Error en la predicción: {str(e)}", None) 

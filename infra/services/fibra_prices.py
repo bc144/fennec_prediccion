@@ -1,59 +1,43 @@
-import yfinance as yf
+import pandas as pd
 from datetime import datetime
-from typing import Optional, Tuple
-from domain.exceptions import DomainException
-
-
-class FibraNoEncontrada(DomainException):
-    """Se lanza cuando no se encuentra información para una FIBRA"""
-    pass
+from domain.models import FibraPrecio
+from domain.exceptions import ErrorFibras
 
 
 class FibraPriceService:
     """Servicio para consultar precios de FIBRAs"""
     
     def __init__(self):
-        # Mapeo de nombres cortos a tickers completos
-        self.ticker_map = {
-            'funo': 'FUNO11.MX',
-            'fmty': 'FMTY14.MX',
-            'danhos': 'DANHOS13.MX'
-        }
-    
-    def get_latest_price(self, fibra_name: str) -> Tuple[float, datetime]:
-        """
-        Obtiene el precio más reciente de una FIBRA
-        
-        Args:
-            fibra_name: Nombre corto de la FIBRA (ej: 'funo')
-            
-        Returns:
-            Tupla con (precio, fecha)
-            
-        Raises:
-            FibraNoEncontrada: Si no se encuentra la FIBRA o no hay datos
-        """
         try:
-            # Obtener el ticker completo
-            ticker = self.ticker_map.get(fibra_name.lower())
-            if not ticker:
-                raise FibraNoEncontrada(f"FIBRA no soportada: {fibra_name}")
-            
-            # Obtener datos de yfinance
-            fibra = yf.Ticker(ticker)
-            hist = fibra.history(period="1d")
-            
-            if hist.empty:
-                raise FibraNoEncontrada(f"No hay datos para la FIBRA: {fibra_name}")
-            
-            # Obtener el último precio de cierre y su fecha
-            last_row = hist.iloc[-1]
-            precio = last_row['Close']
-            fecha = hist.index[-1].to_pydatetime()
-            
-            return precio, fecha
-            
+            self.df = pd.read_csv('fibras.csv')
+            self.df['fecha'] = pd.to_datetime(self.df['fecha'])
+            # Ordenar por fecha para facilitar el cálculo de variaciones
+            self.df = self.df.sort_values('fecha')
         except Exception as e:
-            if isinstance(e, FibraNoEncontrada):
-                raise
-            raise FibraNoEncontrada(f"Error al consultar FIBRA {fibra_name}: {str(e)}") 
+            raise ErrorFibras(f"Error al cargar datos: {str(e)}")
+
+    def get_price(self, ticker: str) -> FibraPrecio:
+        try:
+            # Filtrar por ticker
+            fibra_df = self.df[self.df['ticker'] == ticker].copy()
+            if len(fibra_df) == 0:
+                raise ErrorFibras(f"No se encontró la FIBRA: {ticker}")
+
+            # Obtener el último registro
+            ultimo_registro = fibra_df.iloc[-1]
+            
+            # Calcular la variación si hay más de un registro
+            if len(fibra_df) > 1:
+                registro_anterior = fibra_df.iloc[-2]
+                variacion = ((ultimo_registro['precio'] - registro_anterior['precio']) / registro_anterior['precio']) * 100
+            else:
+                variacion = 0.0
+
+            return FibraPrecio(
+                ticker=ticker,
+                precio=float(ultimo_registro['precio']),
+                variacion=round(float(variacion), 2),
+                fecha=ultimo_registro['fecha']
+            )
+        except Exception as e:
+            raise ErrorFibras(f"Error al obtener precio de {ticker}: {str(e)}") 

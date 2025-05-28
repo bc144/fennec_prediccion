@@ -1,30 +1,23 @@
 from domain.models import FibraPrecio
-from infra.services.fibra_prices import FibraPriceService, FibraNoEncontrada
+from domain.exceptions import ErrorFibras
+from infra.services.fibra_prices import FibraPriceService
 
 
 def get_fibra_price(fibra_name: str) -> FibraPrecio:
     """
-    Caso de uso para obtener el precio actual de una FIBRA
+    Obtiene el precio más reciente de una FIBRA
     
     Args:
-        fibra_name: Nombre corto de la FIBRA (ej: 'funo')
+        fibra_name: Nombre de la FIBRA (ej: 'funo')
         
     Returns:
-        Objeto FibraPrecio con la información
+        Datos de la FIBRA incluyendo precio y variación
         
     Raises:
-        FibraNoEncontrada: Si no se encuentra la FIBRA o no hay datos
+        ErrorFibras: Si no se encuentra la FIBRA o hay error
     """
     try:
         service = FibraPriceService()
-        precio, fecha = service.get_latest_price(fibra_name)
-        
-        return FibraPrecio(
-            ticker=fibra_name.upper(),
-            precio=precio,
-            fecha=fecha
-        )
+        return service.get_price(fibra_name)
     except Exception as e:
-        if isinstance(e, FibraNoEncontrada):
-            raise
-        raise FibraNoEncontrada(str(e)) 
+        raise ErrorFibras(str(e)) 

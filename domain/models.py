@@ -52,6 +52,7 @@ class FibraPrecio(BaseModel):
     """Modelo para el precio de una FIBRA"""
     ticker: str
     precio: float
+    variacion: float  # Porcentaje de variación respecto al día anterior
     fecha: datetime
 
 
@@ -62,4 +63,12 @@ class PreciosAlcaldiaResponse(BaseModel):
 
 class PrecioM2AlcaldiaResponse(BaseModel):
     """Respuesta con precio promedio por metro cuadrado por alcaldía"""
-    precios: Dict[str, float] 
+    precios: Dict[str, float]
+
+
+class FibraResponse(BaseModel):
+    """Modelo de respuesta para datos de una fibra"""
+    nombre: str
+    precio: float
+    variacion: float  # Porcentaje de variación respecto al día anterior
+    fecha: str 
