@@ -58,7 +58,7 @@ class CasasRepository:
             input_data['dimensiones'] = input_data.pop('metros_cuadrados')
             
             # Validar valores numéricos
-            for feature in ['dimensiones', 'recamaras', 'banos', 'estacionamientos']:
+            for feature in ['recamaras', 'banos', 'estacionamientos']:
                 self._validate_numeric_input(feature, float(input_data[feature]))
             
             # Crear un DataFrame con columnas que coincidan con las del modelo

@@ -55,7 +55,7 @@ class DepartamentosRepository:
         """
         try:
             # Validar valores numéricos
-            for feature in ['metros_cuadrados', 'recamaras', 'banos', 'estacionamientos']:
+            for feature in ['recamaras', 'banos', 'estacionamientos']:
                 self._validate_numeric_input(feature, float(input_data[feature]))
             
             # Crear un DataFrame con columnas que coincidan con las del modelo
