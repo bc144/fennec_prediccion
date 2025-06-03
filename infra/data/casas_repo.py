@@ -23,10 +23,9 @@ class CasasRepository:
         
         # Límites para valores numéricos (basados en el análisis de datos)
         self.limits = {
-            'dimensiones': (20, 1000),  # m2 mínimos y máximos razonables
-            'recamaras': (1, 10),       # número de recámaras razonable
-            'banos': (1, 8),            # número de baños razonable
-            'estacionamientos': (0, 6)  # número de estacionamientos razonable
+            'recamaras': (1, 6),           # número de recámaras razonable
+            'banos': (1, 5),               # número de baños razonable
+            'estacionamientos': (0, 4)     # número de estacionamientos razonable
         }
     
     def _validate_numeric_input(self, feature: str, value: float) -> None:

@@ -23,7 +23,6 @@ class DepartamentosRepository:
         
         # Límites para valores numéricos (basados en el análisis de datos)
         self.limits = {
-            'metros_cuadrados': (20, 500),  # m2 mínimos y máximos razonables
             'recamaras': (1, 6),           # número de recámaras razonable
             'banos': (1, 5),               # número de baños razonable
             'estacionamientos': (0, 4)     # número de estacionamientos razonable
