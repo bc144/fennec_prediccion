@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: fennec-ml-api
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: oregon
+    buildCommand: ""
+    startCommand: ""
+    envVars:
+      - key: PYTHONPATH
+        value: /app
+      - key: PORT
+        value: 8000
+    healthCheckPath: /health
+    autoDeploy: true
+    disk:
+      name: fennec-models
+      mountPath: /app/models
+      sizeGB: 1 

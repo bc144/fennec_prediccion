@@ -25,8 +25,8 @@ RUN useradd --create-home --shell /bin/bash app && \
     chown -R app:app /app
 USER app
 
-# Exponer el puerto 8000
+# Exponer el puerto (Render usa variable de entorno PORT)
 EXPOSE 8000
 
-# Comando para ejecutar la aplicación
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"] 
+# Comando para ejecutar la aplicación (Render maneja el puerto automáticamente)
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"] 
