@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  fennec-ml-api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONPATH=/app
+    volumes:
+      # Montar solo los modelos entrenados para desarrollo
+      - ./casas_model.joblib:/app/casas_model.joblib:ro
+      - ./casas_scaler.joblib:/app/casas_scaler.joblib:ro
+      - ./casas_columns.joblib:/app/casas_columns.joblib:ro
+      - ./departamentos_model.joblib:/app/departamentos_model.joblib:ro
+      - ./departamentos_scaler.joblib:/app/departamentos_scaler.joblib:ro
+      - ./departamentos_columns.joblib:/app/departamentos_columns.joblib:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Servicio opcional para desarrollo con hot-reload
+  fennec-ml-dev:
+    build: .
+    ports:
+      - "8001:8000"
+    environment:
+      - PYTHONPATH=/app
+    volumes:
+      - .:/app
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    profiles:
+      - dev 
